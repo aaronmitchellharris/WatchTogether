@@ -18,16 +18,25 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.set('trust proxy', true);
 
+const lobbies = {};
+
 // handle websocket connections
 wss.on('connection', socket => {
-    console.log('Connection made...');
+    
+    // handle receiving messages
     socket.on('message', (data, isBinary) => {
-        wss.clients.forEach(client => {
-            if (client != ws && client.readyState === ws.OPEN) {
-                client.send(data, { binary: isBinary });
-                console.log(data);
-            }
-        })
+        const user = Math.random(); // create unique id for user
+        const received = JSON.parse(data);
+
+        if (received.meta === "join") { // join lobby
+            console.log(`Connection made by User(${user}) from room ${received.lobby}`);
+            if (!lobbies[received.lobby]) lobbies[received.lobby] = {};
+            if (!lobbies[received.lobby][user]) lobbies[received.lobby][user] = socket;
+        } else { // send message to everyone in lobby
+            Object.entries(lobbies[received.lobby]).forEach(([ ,client]) => {
+                client.send(data, { binary: isBinary })
+            });
+        }
     })
 });
 
@@ -36,6 +45,6 @@ app.get('/', (req, res) => {
     res.sendFile('index');
 });
 
-const server = app.listen(PORT, () => {
+app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}...`);
 })

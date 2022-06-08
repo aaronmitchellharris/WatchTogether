@@ -16,14 +16,22 @@ export class WebsocketService {
   connect(): void {
     this.socket = webSocket(url);
     this.socket.subscribe({
-      next: msg => console.log('message received: ' + msg), // Called whenever there is a message from the server.
+      next: this.receiveMessage, // Called whenever there is a message from the server.
       error: err => console.log(err), // Called if at any point WebSocket API signals some kind of error.
       complete: () => console.log('complete') // Called when connection is closed (for whatever reason).
     });
   }
 
-  sendMessage(msg: any): void {
-    this.socket?.next({message: msg});
+  receiveMessage(msg: any): void {
+    console.log('message received: ' + JSON.stringify(msg));
+  }
+
+  sendMessage(meta: any, lobby: Number, msg: any): void {
+    this.socket?.next({ 
+      meta: meta, 
+      lobby: lobby, 
+      message: msg 
+    });
   }
 
   close() {

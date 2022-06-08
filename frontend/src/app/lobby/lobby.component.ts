@@ -16,16 +16,17 @@ export class LobbyComponent implements OnInit {
     private route: ActivatedRoute,
     private WebsocketService: WebsocketService
   ) {
+    this.lobbyId = Number(this.route.snapshot.paramMap.get('id'));
     this.WebsocketService.connect();
+    this.WebsocketService.sendMessage("join", this.lobbyId, null);
   }
   
   ngOnInit(): void {
-    this.lobbyId = Number(this.route.snapshot.paramMap.get('id'));
   }
 
   send(): void {
-    if (this.message) {
-      this.WebsocketService.sendMessage(this.message);
+    if (this.message && this.lobbyId) {
+      this.WebsocketService.sendMessage("message", this.lobbyId, this.message);
     }
   }
 
