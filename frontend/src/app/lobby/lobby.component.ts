@@ -9,14 +9,14 @@ import { WebsocketService } from '../websocket.service';
 })
 export class LobbyComponent implements OnInit {
 
-  lobbyId?: Number;
+  lobbyId?: String;
   @Input() message?: any;
 
   constructor(
     private route: ActivatedRoute,
     private WebsocketService: WebsocketService
   ) {
-    this.lobbyId = Number(this.route.snapshot.paramMap.get('id'));
+    this.lobbyId = String(this.route.snapshot.paramMap.get('id'));
     this.WebsocketService.connect();
     this.WebsocketService.sendMessage("join", this.lobbyId, null);
   }

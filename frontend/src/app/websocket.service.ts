@@ -26,7 +26,7 @@ export class WebsocketService {
     console.log('message received: ' + JSON.stringify(msg));
   }
 
-  sendMessage(meta: any, lobby: Number, msg: any): void {
+  sendMessage(meta: any, lobby: String, msg: any): void {
     this.socket?.next({ 
       meta: meta, 
       lobby: lobby, 
