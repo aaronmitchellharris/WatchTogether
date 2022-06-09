@@ -22,12 +22,11 @@ const lobbies = {};
 
 // handle websocket connections
 wss.on('connection', socket => {
-    
-    // handle receiving messages
-    socket.on('message', (data, isBinary) => {
-        const user = Math.random(); // create unique id for user
-        const received = JSON.parse(data);
+    const user = Math.floor(Math.random() * 1000000000); // create unique id for user
 
+    // handle receiving messages
+    socket.on('message', (data, isBinary) => { 
+        const received = JSON.parse(data);
         if (received.meta === "join") { // join lobby
             console.log(`Connection made by User(${user}) from room ${received.lobby}`);
             if (!lobbies[received.lobby]) lobbies[received.lobby] = {}; // create lobby if it doesn't exist
@@ -37,7 +36,22 @@ wss.on('connection', socket => {
                 client.send(data, { binary: isBinary });
             });
         }
-    })
+    });
+
+    // handle closing connection
+    socket.on('close', () => {
+        Object.keys(lobbies).forEach(lobby => {
+            // remove user from lobby
+            if (lobbies[lobby][user]) {
+                if (Object.keys(lobbies[lobby]).length === 1) {
+                    delete lobbies[lobby];
+                } else {
+                    delete lobbies[lobby][user];
+                }
+                console.log(`Connection ended by User(${user}) from room ${lobby}`);
+            }
+        });
+    });
 });
 
 // get list of existing lobbies
