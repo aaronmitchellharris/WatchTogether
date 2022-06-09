@@ -9,7 +9,7 @@ import { WebsocketService } from '../websocket.service';
 })
 export class LobbyComponent implements OnInit {
 
-  lobbyId?: String;
+  lobbyId: string = '';
   @Input() message?: any;
 
   constructor(
@@ -17,11 +17,11 @@ export class LobbyComponent implements OnInit {
     private WebsocketService: WebsocketService
   ) {
     this.lobbyId = String(this.route.snapshot.paramMap.get('id'));
-    this.WebsocketService.connect();
-    this.WebsocketService.sendMessage("join", this.lobbyId, null);
   }
   
   ngOnInit(): void {
+    this.WebsocketService.connect();
+    this.WebsocketService.sendMessage("join", this.lobbyId, null);
   }
 
   send(): void {

@@ -30,14 +30,19 @@ wss.on('connection', socket => {
 
         if (received.meta === "join") { // join lobby
             console.log(`Connection made by User(${user}) from room ${received.lobby}`);
-            if (!lobbies[received.lobby]) lobbies[received.lobby] = {};
+            if (!lobbies[received.lobby]) lobbies[received.lobby] = {}; // create lobby if it doesn't exist
             if (!lobbies[received.lobby][user]) lobbies[received.lobby][user] = socket;
         } else { // send message to everyone in lobby
             Object.entries(lobbies[received.lobby]).forEach(([ ,client]) => {
-                client.send(data, { binary: isBinary })
+                client.send(data, { binary: isBinary });
             });
         }
     })
+});
+
+// get list of existing lobbies
+app.get('/lobbies', (req, res) => {
+    res.json({ lobbies: Object.keys(lobbies) });
 });
 
 // use angular for frontend
@@ -45,6 +50,7 @@ app.get('/', (req, res) => {
     res.sendFile('index');
 });
 
+// start server
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}...`);
 })

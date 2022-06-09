@@ -1,0 +1,8 @@
+<button routerLink="/room/{{newCode}}" class="btn btn-dark">Start New Lobby</button>
+
+<form (ngSubmit)="onSubmit(inputCode)" #lobbyForm="ngForm">
+    <label for="lobby-code">Enter Lobby Code:</label>
+    <input id="lobby-code" [(ngModel)]="inputCode" name="code" minlength="6" maxlength="6">
+    <button type="submit" class="btn btn-dark" [disabled]="!lobbyForm.form.valid">Join Lobby</button>
+</form>
+<div class="alert alert-danger"  [hidden]="!alert">Invalid Lobby Code</div>
