@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { WebsocketService } from '../websocket.service';
 import { Message } from '../message';
 import { Subscription } from 'rxjs';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-lobby',
@@ -15,20 +16,22 @@ export class LobbyComponent implements OnInit {
   @Input() message: any;
   messageLog: Message[];
   user?: string;
-  @Input() nickname?: string;
+  @Input() nickname: string;
   subscription?: Subscription;
 
   constructor(
     private route: ActivatedRoute,
-    private WebsocketService: WebsocketService
+    private WebsocketService: WebsocketService,
+    private cookieService: CookieService
   ) {
     this.lobbyId = String(this.route.snapshot.paramMap.get('id'));
     this.messageLog = [];
+    this.nickname = cookieService.check('nickname') ? cookieService.get('nickname') : '';
   }
   
   ngOnInit(): void {
     this.WebsocketService.connect();
-    this.WebsocketService.sendMessage("join", this.lobbyId, null);
+    this.WebsocketService.sendMessage("join", this.lobbyId, null, this.user, this.nickname);
     this.subscription = this.WebsocketService.getUpdateSubject().subscribe({
       next: (msg) => {this.addMessage(msg)},
       error: (error) => console.log(error)
@@ -53,7 +56,11 @@ export class LobbyComponent implements OnInit {
     if (data.meta === 'initial') {
       this.messageLog = data.content;
       this.user = data.user;
-      this.nickname = data.nickname;
+      if (!this.cookieService.check('nickname')) {
+        this.nickname = data.user;
+      }
+    } else if (data.meta === 'log' || data.meta == 'system') {
+      this.messageLog = data.content;
     } else {
       this.messageLog.push(data);
     }
@@ -62,6 +69,7 @@ export class LobbyComponent implements OnInit {
   // update nickname
   onSubmit(): void {
     this.WebsocketService.sendMessage("nickname", this.lobbyId, null, this.user, this.nickname);
+    this.cookieService.set('nickname', this.nickname);
   }
 
 }

@@ -6,6 +6,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { LobbyComponent } from './lobby/lobby.component';
 import { CreateLobbyComponent } from './create-lobby/create-lobby.component';
+import { CookieService } from 'ngx-cookie-service';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,9 @@ import { CreateLobbyComponent } from './create-lobby/create-lobby.component';
     FormsModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [
+    CookieService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

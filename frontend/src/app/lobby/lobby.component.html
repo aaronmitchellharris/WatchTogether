@@ -8,7 +8,9 @@
 
 <ul>
     <li *ngFor="let msg of messageLog">
-        <span *ngIf="msg.meta == 'message'">{{msg.nickname}}: </span><span [ngClass]="{'system': msg.meta == 'system'}">{{msg.content}}</span>
+        <span [ngClass]="{'system': msg.meta == 'system'}">
+            {{msg.nickname}}<span *ngIf="msg.meta == 'message'">: </span> {{msg.content}}
+        </span>
     </li>
 </ul>
 
