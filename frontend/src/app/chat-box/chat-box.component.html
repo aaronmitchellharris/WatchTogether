@@ -1,0 +1,7 @@
+<ul>
+    <li *ngFor="let msg of messages">
+        <span [ngClass]="{'system': msg.meta == 'system'}">
+            {{msg.nickname}}<span *ngIf="msg.meta == 'message'">: </span> {{msg.content}}
+        </span>
+    </li>
+</ul>

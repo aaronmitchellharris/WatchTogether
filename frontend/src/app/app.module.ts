@@ -7,12 +7,14 @@ import { AppComponent } from './app.component';
 import { LobbyComponent } from './lobby/lobby.component';
 import { CreateLobbyComponent } from './create-lobby/create-lobby.component';
 import { CookieService } from 'ngx-cookie-service';
+import { ChatBoxComponent } from './chat-box/chat-box.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LobbyComponent,
-    CreateLobbyComponent
+    CreateLobbyComponent,
+    ChatBoxComponent
   ],
   imports: [
     BrowserModule,
