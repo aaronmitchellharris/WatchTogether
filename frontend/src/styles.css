@@ -1,1 +1,6 @@
 @import "~bootstrap/dist/css/bootstrap.css";
+
+.system {
+    color: grey;
+    font-style: italic;
+}

@@ -1,3 +1,18 @@
 <p>lobby {{lobbyId}}</p>
+
+<form (ngSubmit)="onSubmit()" #nicknameForm="ngForm">
+    <label for="nickname">Change nickname:</label>
+    <input id="nickname" [(ngModel)]="nickname" name="code" minlength="6" maxlength="6">
+    <button type="submit" class="btn btn-dark">Change</button>
+</form>
+
+<ul>
+    <li *ngFor="let msg of messageLog">
+        <span *ngIf="msg.meta == 'message'">{{msg.nickname}}: </span><span [ngClass]="{'system': msg.meta == 'system'}">{{msg.content}}</span>
+    </li>
+</ul>
+
 <input type="text" [(ngModel)]="message">
 <button type="button" (click)="send()" class="btn btn-dark">send</button>
+
+<button routerLink="/" class="btn btn-dark">Exit Lobby</button>

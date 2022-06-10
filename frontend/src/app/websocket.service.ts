@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { environment } from 'src/environments/environment';
+import { Subject } from 'rxjs';
 
 const url = environment.websocket_url;
 
@@ -9,33 +10,45 @@ const url = environment.websocket_url;
 })
 export class WebsocketService {
 
-  private socket?: WebSocketSubject<any>;
+  private socket: WebSocketSubject<any>;
+  updateSubject: Subject<any>;
 
-  constructor() {}
+  constructor() {
+    this.socket = webSocket(url);  // create socket
+    this.updateSubject = new Subject<any>();
+  }
 
+  // connect to socket
   connect(): void {
-    this.socket = webSocket(url);
     this.socket.subscribe({
-      next: this.receiveMessage, // Called whenever there is a message from the server.
+      next: (msg) => this.receiveMessage(msg), // Called whenever there is a message from the server.
       error: err => console.log(err), // Called if at any point WebSocket API signals some kind of error.
       complete: () => console.log('complete') // Called when connection is closed (for whatever reason).
     });
+    console.log('Connected to lobby');
+  }
+
+  getUpdateSubject(): Subject<any> {
+    return this.updateSubject;
   }
 
   receiveMessage(msg: any): void {
-    console.log('message received: ' + JSON.stringify(msg));
+    this.updateSubject.next(msg);
   }
 
-  sendMessage(meta: any, lobby: String, msg: any): void {
-    this.socket?.next({ 
-      meta: meta, 
-      lobby: lobby, 
-      message: msg 
+  // send message to server
+  sendMessage(meta: any, lobby: string, content: any, user?: string, nickname?: string): void {
+    this.socket.next({ 
+      meta: meta,
+      lobby: lobby,
+      user: user,
+      nickname: nickname,
+      content: content
     });
   }
 
   close() {
-    this.socket?.complete();
+    this.socket.complete();
   }
 
 }

@@ -20,37 +20,70 @@ app.set('trust proxy', true);
 
 const lobbies = {};
 
+sendToLobby = (lobby, message) => {
+    Object.entries(lobbies[lobby]['users']).forEach(([ ,client]) => {
+        // send message
+        client.send(JSON.stringify(message)); 
+    });
+};
+
 // handle websocket connections
 wss.on('connection', socket => {
     const user = Math.floor(Math.random() * 1000000000); // create unique id for user
-
+    let nickname = user;
     // handle receiving messages
     socket.on('message', (data, isBinary) => { 
         const received = JSON.parse(data);
-        if (received.meta === "join") { // join lobby
+        lobby = received.lobby;
+
+        // join lobby
+        if (received.meta === "join") {
             console.log(`Connection made by User(${user}) from room ${received.lobby}`);
-            if (!lobbies[received.lobby]) lobbies[received.lobby] = {}; // create lobby if it doesn't exist
-            if (!lobbies[received.lobby][user]) lobbies[received.lobby][user] = socket;
-        } else { // send message to everyone in lobby
-            Object.entries(lobbies[received.lobby]).forEach(([ ,client]) => {
-                client.send(data, { binary: isBinary });
-            });
+            // create lobby if it doesn't exist
+            if (!lobbies[received.lobby]) lobbies[received.lobby] = {'messageLog': [], 'users': {}};
+            if (!lobbies[received.lobby]['users'][user]) lobbies[received.lobby]['users'][user] = socket;
+            // send message log
+            socket.send(JSON.stringify({
+                meta: 'initial',
+                lobby: received.lobby,
+                content: lobbies[received.lobby]['messageLog'],
+                user: user,
+                nickname: user
+            }));
+            // announce entrance to lobby
+            sendToLobby(received.lobby, {meta: 'system', lobby: received.lobby, content: `${nickname} has joined`});
+            console.log(Object.keys(lobbies[received.lobby]['users']));
+        
+        // update nickname
+        } else if (received.meta === "nickname") {
+            nickname = received.nickname;
+            lobbies[received.lobby]['messageLog'].map(msg => {if (msg.user == received.user) msg.nickname = received.nickname});
+            sendToLobby(received.lobby, JSON.stringify({
+                meta: 'log',
+                lobby: received.lobby,
+                content: lobbies[received.lobby]['messageLog']
+            }))
+        // send message to everyone in lobby
+        } else {
+            lobbies[received.lobby]['messageLog'].push(received); // save message in log
+            sendToLobby(received.lobby, received);
         }
     });
 
     // handle closing connection
     socket.on('close', () => {
         Object.keys(lobbies).forEach(lobby => {
-            // remove user from lobby
-            if (lobbies[lobby][user]) {
-                if (Object.keys(lobbies[lobby]).length === 1) {
-                    delete lobbies[lobby];
-                } else {
-                    delete lobbies[lobby][user];
-                }
-                console.log(`Connection ended by User(${user}) from room ${lobby}`);
+            if (Object.keys(lobbies[lobby]['users']).length === 1) {
+                delete lobbies[lobby];
+            } else {
+                sendToLobby(lobby, {meta: 'system', lobby: lobby, content: `${nickname} has left`})
+                delete lobbies[lobby]['users'][user];
             }
-        });
+            console.log(`Connection ended by User(${user}) from room ${lobby}`);
+            try {
+            console.log(Object.keys(lobbies[lobby]['users']));
+            } catch{}
+        })
     });
 });
 
