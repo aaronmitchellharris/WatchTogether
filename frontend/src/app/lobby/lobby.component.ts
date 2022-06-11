@@ -48,6 +48,7 @@ export class LobbyComponent implements OnInit {
   send(): void {
     if (this.message && this.lobbyId) {
       this.WebsocketService.sendMessage("message", this.lobbyId, this.message, this.user, this.nickname);
+      this.message = '';
     }
   }
 

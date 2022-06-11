@@ -1,7 +1,5 @@
-<ul>
-    <li *ngFor="let msg of messages">
-        <span [ngClass]="{'system': msg.meta == 'system'}">
-            {{msg.nickname}}<span *ngIf="msg.meta == 'message'">: </span> {{msg.content}}
-        </span>
-    </li>
-</ul>
+<div class="chat-box overflow-scroll">
+    <div *ngFor="let msg of messages" class="text-start text-wrap" [ngClass]="{'system': msg.meta == 'system'}">
+        {{msg.nickname}}<span *ngIf="msg.meta == 'message'">: </span> {{msg.content}}
+    </div>
+</div>

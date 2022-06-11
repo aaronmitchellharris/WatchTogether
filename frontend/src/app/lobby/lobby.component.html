@@ -1,14 +1,32 @@
-<p>lobby {{lobbyId}}</p>
+<div class="container-fluid border">
+    <div class="row h-100 border">
 
-<form (ngSubmit)="onSubmit()" #nicknameForm="ngForm">
-    <label for="nickname">Change nickname:</label>
-    <input id="nickname" [(ngModel)]="nickname" name="code" minlength="6" maxlength="6">
-    <button type="submit" class="btn btn-dark">Change</button>
-</form>
+        <div class="col border">
+            <p>lobby {{lobbyId}}</p>
 
-<app-chat-box [messages]="messageLog"></app-chat-box>
+            <form (ngSubmit)="onSubmit()" #nicknameForm="ngForm">
+                <label for="nickname">Change nickname:</label>
+                <input id="nickname" [(ngModel)]="nickname" name="code" minlength="6" maxlength="6">
+                <button type="submit" class="btn btn-dark">Change</button>
+            </form>
+            
+            <button routerLink="/" class="btn btn-dark">Exit Lobby</button>
+        </div>
 
-<input type="text" [(ngModel)]="message">
-<button type="button" (click)="send()" class="btn btn-dark">send</button>
 
-<button routerLink="/" class="btn btn-dark">Exit Lobby</button>
+        
+
+        <div class="col-3 h-100 border">
+
+                
+                
+                    <app-chat-box [messages]="messageLog"></app-chat-box>
+
+                    <input type="text" [(ngModel)]="message">
+                    <button type="button" (click)="send()" class="btn btn-dark">send</button>
+                
+
+        </div>
+
+    </div>
+</div>
