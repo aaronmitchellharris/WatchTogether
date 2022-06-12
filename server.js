@@ -32,12 +32,12 @@ sendToLobby = (lobby, message) => {
 // handle websocket connections
 wss.on('connection', socket => {
     const user = Math.floor(Math.random() * 1000000000); // create unique id for user
-    nickname = user;
+    let nickname = user;
 
     // handle receiving messages
     socket.on('message', (data, isBinary) => { 
         const received = JSON.parse(data);
-        lobby = received.lobby;
+        let lobby = received.lobby;
 
         // join lobby
         if (received.meta === "join") {
@@ -71,10 +71,15 @@ wss.on('connection', socket => {
             })
         } else if (received.meta === "video") {
             lobbies[received.lobby]['videoId'] = received.content;
+            message = {meta: 'system', lobby: received.lobby, content: 'changed the video', user: user, nickname, nickname};
+            lobbies[received.lobby]['messageLog'].push(message)
             sendToLobby(received.lobby, {
                 meta: 'video',
                 lobby: received.lobby,
-                content: received.content
+                content: {
+                    videoId: received.content, 
+                    messageLog: lobbies[received.lobby]['messageLog']
+                }
             })
 
         // send message to everyone in lobby

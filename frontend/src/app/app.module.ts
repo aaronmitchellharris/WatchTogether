@@ -9,6 +9,7 @@ import { CreateLobbyComponent } from './create-lobby/create-lobby.component';
 import { CookieService } from 'ngx-cookie-service';
 import { ChatBoxComponent } from './chat-box/chat-box.component';
 import { YouTubePlayerModule } from '@angular/youtube-player';
+import { ClipboardModule } from 'ngx-clipboard';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { YouTubePlayerModule } from '@angular/youtube-player';
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    YouTubePlayerModule
+    YouTubePlayerModule,
+    ClipboardModule
   ],
   providers: [
     CookieService

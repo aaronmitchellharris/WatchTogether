@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { WebsocketService } from '../websocket.service';
 import { Message } from '../message';
 import { Subscription } from 'rxjs';
@@ -13,6 +13,7 @@ import { CookieService } from 'ngx-cookie-service';
 export class LobbyComponent implements OnInit, OnDestroy {
 
   lobbyId: string;
+  lobbyLink: string;
   user?: string;
   @Input() nickname: string;
   @Input() message: any;
@@ -20,13 +21,16 @@ export class LobbyComponent implements OnInit, OnDestroy {
   videoId?: string;
   messageLog: Message[];
   subscription?: Subscription;
+  playerVars: {} = {"playsinline": 1, "origin": "https://www.youtube.com"}
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private WebsocketService: WebsocketService,
     private cookieService: CookieService
   ) {
     this.lobbyId = String(this.route.snapshot.paramMap.get('id'));
+    this.lobbyLink = window.location.origin + this.router.url;
     this.messageLog = [];
     this.nickname = cookieService.check('nickname') ? cookieService.get('nickname') : '';
   }
@@ -64,7 +68,8 @@ export class LobbyComponent implements OnInit, OnDestroy {
     } else if (data.meta === 'log' || data.meta == 'system') {
       this.messageLog = data.content;
     } else if (data.meta === 'video') {
-      this.videoId = data.content;
+      this.videoId = data.content.videoId;
+      this.messageLog = data.content.messageLog;
     } else {
       this.messageLog.push(data);
     }
@@ -89,6 +94,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
         return;
       }
     })
+    this.videoLink = '';
   }
 
 }
