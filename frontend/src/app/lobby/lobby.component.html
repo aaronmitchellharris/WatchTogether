@@ -1,32 +1,25 @@
-<div class="container-fluid border">
-    <div class="row h-100 border">
-
-        <div class="col border">
+<div class="container-fluid h-100">
+    <div class="row h-100">
+        <div class="col">
             <p>lobby {{lobbyId}}</p>
-
             <form (ngSubmit)="onSubmit()" #nicknameForm="ngForm">
                 <label for="nickname">Change nickname:</label>
                 <input id="nickname" [(ngModel)]="nickname" name="code" minlength="6" maxlength="6">
                 <button type="submit" class="btn btn-dark">Change</button>
             </form>
-            
             <button routerLink="/" class="btn btn-dark">Exit Lobby</button>
         </div>
-
-
-        
-
-        <div class="col-3 h-100 border">
-
-                
-                
-                    <app-chat-box [messages]="messageLog"></app-chat-box>
-
-                    <input type="text" [(ngModel)]="message">
-                    <button type="button" (click)="send()" class="btn btn-dark">send</button>
-                
-
+        <div id="chat" class="col-md-2 p-0 h-100">
+            <div id="chatBox" class="">
+                <app-chat-box class="" [messages]="messageLog"></app-chat-box>
+            </div>
+            <div id="chatForm" class="">
+                <form (ngSubmit)="send()" #chatForm="ngForm">
+                    <input id="chatInput" class="w-100 border border-dark border-2 rounded" name="chatMessage" type="text" [(ngModel)]="message">
+                    <button type="submit" (click)="send()" id="chatButton"
+                        class="btn btn-dark w-100">Send</button>
+                </form>
+            </div>
         </div>
-
     </div>
 </div>

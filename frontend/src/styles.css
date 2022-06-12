@@ -1,7 +1,27 @@
 @import "~bootstrap/dist/css/bootstrap.css";
 
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
 .system {
     color: grey;
     font-style: italic;
 }
 
+#chatBox {
+    height: calc(100% - 68px);
+}
+
+.messages {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+#bottom {
+    height: calc(100% - 56px);
+}
