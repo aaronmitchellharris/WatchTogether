@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@angular/youtube-player": "^14.0.1",
     "cors": "^2.8.5",
     "express": "^4.18.1",
     "ws": "^8.7.0"

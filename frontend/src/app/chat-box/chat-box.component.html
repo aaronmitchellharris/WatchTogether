@@ -1,4 +1,4 @@
-<div class="messages overflow-auto h-100 bg-light">
+<div class="messages overflow-auto h-100">
     <div class="m-auto"></div>
     <div *ngFor="let msg of messages" class="message text-start text-wrap" [ngClass]="{'system': msg.meta == 'system'}">
         <b>{{msg.nickname}}</b><span *ngIf="msg.meta == 'message'">: </span> {{msg.content}}

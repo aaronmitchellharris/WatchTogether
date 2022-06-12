@@ -1,13 +1,20 @@
 <div class="container-fluid h-100">
     <div class="row h-100">
-        <div class="col">
+        <div class="col bg-light">
             <p>lobby {{lobbyId}}</p>
-            <form (ngSubmit)="onSubmit()" #nicknameForm="ngForm">
+            <form (ngSubmit)="updateNickname()" #nicknameForm="ngForm">
                 <label for="nickname">Change nickname:</label>
-                <input id="nickname" [(ngModel)]="nickname" name="code" minlength="6" maxlength="6">
+                <input id="nickname" type="text" [(ngModel)]="nickname" name="code" minlength="6" maxlength="6">
+                <button type="submit" class="btn btn-dark">Change</button>
+            </form>
+            <form (ngSubmit)="updateVideoId()" #videoIdForm="ngForm">
+                <label for="videoIdInput">Change Video:</label>
+                <input id="videoIdInput" type="text" [(ngModel)]="videoLink" name="videoInput" min="1">
                 <button type="submit" class="btn btn-dark">Change</button>
             </form>
             <button routerLink="/" class="btn btn-dark">Exit Lobby</button>
+
+            <youtube-player [videoId]="videoId"></youtube-player>
         </div>
         <div id="chat" class="col-md-2 p-0 h-100">
             <div id="chatBox" class="">
@@ -15,9 +22,9 @@
             </div>
             <div id="chatForm" class="">
                 <form (ngSubmit)="send()" #chatForm="ngForm">
-                    <input id="chatInput" class="w-100 border border-dark border-2 rounded" name="chatMessage" type="text" [(ngModel)]="message">
+                    <input id="chatInput" type="text" [(ngModel)]="message" name="chatMessage" class="w-100 border border-dark border-2 rounded">
                     <button type="submit" (click)="send()" id="chatButton"
-                        class="btn btn-dark w-100">Send</button>
+                        class="btn btn-dark w-100">Send Message</button>
                 </form>
             </div>
         </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { WebsocketService } from '../websocket.service';
 import { Message } from '../message';
@@ -10,13 +10,15 @@ import { CookieService } from 'ngx-cookie-service';
   templateUrl: './lobby.component.html',
   styleUrls: ['./lobby.component.css']
 })
-export class LobbyComponent implements OnInit {
+export class LobbyComponent implements OnInit, OnDestroy {
 
   lobbyId: string;
-  @Input() message: any;
-  messageLog: Message[];
   user?: string;
   @Input() nickname: string;
+  @Input() message: any;
+  @Input() videoLink?: string;
+  videoId?: string;
+  messageLog: Message[];
   subscription?: Subscription;
 
   constructor(
@@ -36,7 +38,6 @@ export class LobbyComponent implements OnInit {
       next: (msg) => {this.addMessage(msg)},
       error: (error) => console.log(error)
     })
-    console.log(this.messageLog);
   }
 
   ngOnDestroy(): void {
@@ -62,15 +63,32 @@ export class LobbyComponent implements OnInit {
       }
     } else if (data.meta === 'log' || data.meta == 'system') {
       this.messageLog = data.content;
+    } else if (data.meta === 'video') {
+      this.videoId = data.content;
     } else {
       this.messageLog.push(data);
     }
   }
 
   // update nickname
-  onSubmit(): void {
+  updateNickname(): void {
     this.WebsocketService.sendMessage("nickname", this.lobbyId, null, this.user, this.nickname);
     this.cookieService.set('nickname', this.nickname);
+  }
+
+  // update video ID
+  updateVideoId(): void {
+    let paramString = this.videoLink?.split('?')[1];
+    let paramPairs = paramString?.split('&');
+
+    paramPairs?.forEach(pair => {
+      let param = pair.split('=');
+      if (param[0] == 'v') {
+        //this.videoId = param[1];
+        this.WebsocketService.sendMessage("video", this.lobbyId, param[1], this.user, this.nickname);
+        return;
+      }
+    })
   }
 
 }

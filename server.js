@@ -21,6 +21,7 @@ app.set('trust proxy', true);
 const lobbies = {};
 let message;
 
+// send message to everyone in lobby
 sendToLobby = (lobby, message) => {
     Object.entries(lobbies[lobby]['users']).forEach(([ ,client]) => {
         // send message
@@ -43,7 +44,7 @@ wss.on('connection', socket => {
             nickname = received.nickname ? received.nickname : user;
             console.log(`Connection made by User(${user}) from room ${received.lobby}`);
             // create lobby if it doesn't exist
-            if (!lobbies[received.lobby]) lobbies[received.lobby] = {'messageLog': [], 'users': {}};
+            if (!lobbies[received.lobby]) lobbies[received.lobby] = {'messageLog': [], 'users': {}, 'videoId': ''};
             if (!lobbies[received.lobby]['users'][user]) lobbies[received.lobby]['users'][user] = socket;
             // send message log
             socket.send(JSON.stringify({
@@ -68,6 +69,14 @@ wss.on('connection', socket => {
                 lobby: received.lobby,
                 content: lobbies[received.lobby]['messageLog']
             })
+        } else if (received.meta === "video") {
+            lobbies[received.lobby]['videoId'] = received.content;
+            sendToLobby(received.lobby, {
+                meta: 'video',
+                lobby: received.lobby,
+                content: received.content
+            })
+
         // send message to everyone in lobby
         } else {
             lobbies[received.lobby]['messageLog'].push(received); // save message in log
