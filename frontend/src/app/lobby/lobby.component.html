@@ -7,7 +7,7 @@
                 </div>
                 <youtube-player [videoId]="videoId" [height]="height" [width]="width"></youtube-player>
             </div>
-            <div id="menu" class="container-fluid bg-dark">
+            <div id="menu" class="container-fluid">
                 <div id="menu-items" class="row align-items-center">
                     <div class="col row">
                         <div id="code-group" class="col-12">
@@ -15,7 +15,7 @@
                                 <label for="room-id" class="input-group-text">Room Code</label>
                                 <input id="room-id" type="text" [value]="lobbyId"
                                     class="form-control shadow-none bg-white" disabled>
-                                <button ngxClipboard [cbContent]="lobbyId" class="btn btn-info"><i
+                                <button ngxClipboard [cbContent]="lobbyId" class="btn"><i
                                         class="fa-solid fa-copy"></i></button>
                             </div>
                         </div>
@@ -24,7 +24,7 @@
                                 <label for="room-link" class="input-group-text">Room Link</label>
                                 <input id="room-link" type="text" [value]="lobbyLink"
                                     class="form-control shadow-none bg-white" disabled>
-                                <button ngxClipboard [cbContent]="lobbyLink" class="btn btn-info"><i
+                                <button ngxClipboard [cbContent]="lobbyLink" class="btn"><i
                                         class="fa-solid fa-copy"></i></button>
                             </div>
                         </div>
@@ -36,7 +36,7 @@
                                 <label for="videoIdInput" class="input-group-text">YouTube Link:</label>
                                 <input id="videoIdInput" type="text" [(ngModel)]="videoLink" name="videoInput" min="1"
                                     class="form-control shadow-none">
-                                <button type="submit" class="btn btn-info"><i class="fa-brands fa-youtube"></i></button>
+                                <button type="submit" class="btn"><i class="fa-brands fa-youtube"></i></button>
                             </div>
                         </form>
                     </div>
@@ -46,7 +46,7 @@
                                 <label for="nickname" class="input-group-text">Name:</label>
                                 <input id="nickname" type="text" [(ngModel)]="nickname" name="code" minlength="6"
                                     maxlength="6" class="form-control shadow-none">
-                                <button type="submit" class="btn btn-info input-group-append"><i
+                                <button type="submit" class="btn input-group-append"><i
                                         class="fa-solid fa-save"></i></button>
                             </div>
                         </form>
@@ -66,7 +66,7 @@
                     <input id="chatInput" type="text" [(ngModel)]="message" name="chatMessage"
                         class="w-100 form-control border-bottom-0 border-start-0 border-end-0 border-dark shadow-none rounded-0">
                     <button type="submit" (click)="send()" id="chatButton"
-                        class="btn btn-info border-start-0 border-end-0 border-bottom-0 border-dark rounded-0 w-100">Send
+                        class="btn border-start-0 border-end-0 border-bottom-0 border-dark rounded-0 w-100">Send
                         Message</button>
                 </form>
             </div>

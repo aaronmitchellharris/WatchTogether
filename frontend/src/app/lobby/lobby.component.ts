@@ -2,7 +2,7 @@ import { Component, OnInit, Input, OnDestroy, AfterContentInit } from '@angular/
 import { ActivatedRoute, Router } from '@angular/router';
 import { WebsocketService } from '../websocket.service';
 import { Message } from '../message';
-import { Observable, Subscription, fromEvent } from 'rxjs';
+import { Subscription, fromEvent } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
 
 @Component({
@@ -22,9 +22,9 @@ export class LobbyComponent implements OnInit, OnDestroy, AfterContentInit {
   @Input() height?: number;
   @Input() width?: number;
   messageLog: Message[];
-  subscription?: Subscription;
+  websocketSubscription?: Subscription;
+  eventSubscription?: Subscription;
   size?: HTMLElement;
-  sizeListener: Observable<Event>;
 
   constructor(
     private route: ActivatedRoute,
@@ -36,36 +36,36 @@ export class LobbyComponent implements OnInit, OnDestroy, AfterContentInit {
     this.lobbyLink = window.location.origin + this.router.url;
     this.messageLog = [];
     this.nickname = cookieService.check('nickname') ? cookieService.get('nickname') : '';
-    this.sizeListener = fromEvent(window, 'resize');
   }
 
   ngAfterContentInit(): void {
     this.size = document.getElementById('video') as HTMLElement;
-    this.height = this.size!.offsetHeight;
-    this.width = this.size!.offsetWidth;
-    this.sizeListener.subscribe({
+    this.height = this.size?.offsetHeight;
+    this.width = this.size?.offsetWidth;
+    this.eventSubscription = fromEvent(window, 'resize').subscribe({
       next: () => {
-        this.height = this.size!.offsetHeight;
-        this.width = this.size!.offsetWidth;
+        this.height = this.size?.offsetHeight;
+        this.width = this.size?.offsetWidth;
       }
-    })
+    });
   }
 
   ngOnInit(): void {
     this.WebsocketService.connect();
     this.WebsocketService.sendMessage("join", this.lobbyId, null, this.user, this.nickname);
-    this.subscription = this.WebsocketService.getUpdateSubject().subscribe({
+    this.websocketSubscription = this.WebsocketService.getUpdateSubject().subscribe({
       next: (msg) => {this.addMessage(msg)},
       error: (error) => console.log(error)
-    })
+    });
   }
 
   ngOnDestroy(): void {
     this.WebsocketService.close();
-    this.subscription?.unsubscribe();
+    this.websocketSubscription?.unsubscribe();
+    this.eventSubscription?.unsubscribe();
   }
 
-  // send message to server
+  // send chat message to server
   send(): void {
     if (this.message && this.lobbyId) {
       this.WebsocketService.sendMessage("message", this.lobbyId, this.message, this.user, this.nickname);
