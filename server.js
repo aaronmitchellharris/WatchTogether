@@ -19,7 +19,6 @@ app.use(express.json());
 app.set('trust proxy', true);
 
 const lobbies = {};
-let message;
 
 // send message to everyone in lobby
 sendToLobby = (lobby, message) => {
@@ -33,7 +32,7 @@ sendToLobby = (lobby, message) => {
 wss.on('connection', socket => {
     const user = Math.floor(Math.random() * 1000000000); // create unique id for user
     let nickname = user;
-
+    let message;
     // handle receiving messages
     socket.on('message', (data, isBinary) => { 
         const received = JSON.parse(data);

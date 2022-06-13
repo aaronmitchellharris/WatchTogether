@@ -1,20 +1,18 @@
 <div class="container-fluid h-100">
     <div class="row h-100">
-        <div class="col h-100 p-0 bg-light">
-
-            <div id="video" class="bg-info">
-                <youtube-player videoId="--FmExEAsM8"></youtube-player>
+        <div class="col-10 h-100 p-0 bg-light">
+            <div id="video" class="bg-black text-center">
+                <p id="instructions">Paste a YouTube link below to start the watching together!</p>
+                <youtube-player [videoId]="videoId" [height]="height" [width]="width"></youtube-player>
             </div>
-
             <div id="menu" class="container-fluid bg-dark">
                 <div id="menu-items" class="row align-items-center">
                     <div class="col row">
-
                         <div id="code-group" class="col-12">
-
                             <div class="input-group input-group-sm w-75 mx-auto">
                                 <label for="room-id" class="input-group-text">Room Code</label>
-                                <input id="room-id" type="text" [value]="lobbyId" class="form-control shadow-none bg-white" disabled>
+                                <input id="room-id" type="text" [value]="lobbyId"
+                                    class="form-control shadow-none bg-white" disabled>
                                 <button ngxClipboard [cbContent]="lobbyId" class="btn btn-info"><i
                                         class="fa-solid fa-copy"></i></button>
                             </div>
@@ -22,7 +20,8 @@
                         <div id="link-group" class="col">
                             <div class="input-group input-group-sm w-75 mx-auto">
                                 <label for="room-link" class="input-group-text">Room Link</label>
-                                <input id="room-link" type="text" [value]="lobbyLink" class="form-control shadow-none bg-white" disabled>
+                                <input id="room-link" type="text" [value]="lobbyLink"
+                                    class="form-control shadow-none bg-white" disabled>
                                 <button ngxClipboard [cbContent]="lobbyLink" class="btn btn-info"><i
                                         class="fa-solid fa-copy"></i></button>
                             </div>
@@ -58,7 +57,7 @@
                 </div>
             </div>
         </div>
-        <div id="chat" class="col-md-2 p-0 h-100">
+        <div id="chat" class="col-2 p-0 h-100">
 
             <div id="chatBox" class="">
                 <app-chat-box class="" [messages]="messageLog"></app-chat-box>

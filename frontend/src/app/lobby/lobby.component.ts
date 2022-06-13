@@ -1,8 +1,8 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, AfterContentInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { WebsocketService } from '../websocket.service';
 import { Message } from '../message';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription, fromEvent } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
 
 @Component({
@@ -10,7 +10,7 @@ import { CookieService } from 'ngx-cookie-service';
   templateUrl: './lobby.component.html',
   styleUrls: ['./lobby.component.css']
 })
-export class LobbyComponent implements OnInit, OnDestroy {
+export class LobbyComponent implements OnInit, OnDestroy, AfterContentInit {
 
   lobbyId: string;
   lobbyLink: string;
@@ -19,9 +19,12 @@ export class LobbyComponent implements OnInit, OnDestroy {
   @Input() message: any;
   @Input() videoLink?: string;
   videoId?: string;
+  @Input() height?: number;
+  @Input() width?: number;
   messageLog: Message[];
   subscription?: Subscription;
-  playerVars: {} = {"playsinline": 1, "origin": "https://www.youtube.com"}
+  size?: HTMLElement;
+  sizeListener: Observable<Event>;
 
   constructor(
     private route: ActivatedRoute,
@@ -33,8 +36,21 @@ export class LobbyComponent implements OnInit, OnDestroy {
     this.lobbyLink = window.location.origin + this.router.url;
     this.messageLog = [];
     this.nickname = cookieService.check('nickname') ? cookieService.get('nickname') : '';
+    this.sizeListener = fromEvent(window, 'resize');
   }
-  
+
+  ngAfterContentInit(): void {
+    this.size = document.getElementById('video') as HTMLElement;
+    this.height = this.size!.offsetHeight;
+    this.width = this.size!.offsetWidth;
+    this.sizeListener.subscribe({
+      next: () => {
+        this.height = this.size!.offsetHeight;
+        this.width = this.size!.offsetWidth;
+      }
+    })
+  }
+
   ngOnInit(): void {
     this.WebsocketService.connect();
     this.WebsocketService.sendMessage("join", this.lobbyId, null, this.user, this.nickname);
@@ -89,7 +105,6 @@ export class LobbyComponent implements OnInit, OnDestroy {
     paramPairs?.forEach(pair => {
       let param = pair.split('=');
       if (param[0] == 'v') {
-        //this.videoId = param[1];
         this.WebsocketService.sendMessage("video", this.lobbyId, param[1], this.user, this.nickname);
         return;
       }

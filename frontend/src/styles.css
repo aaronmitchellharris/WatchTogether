@@ -12,6 +12,10 @@ html, body {
     font-style: italic;
 }
 
+#instructions {
+    color: white;
+}
+
 #chatBox, #video {
     height: calc(100% - 74px);
 }
@@ -37,6 +41,10 @@ html, body {
     display: flex;
     flex-direction: column;
     padding: 10px;
+}
+
+.message {
+    margin: 3px;
 }
 
 #bottom {
