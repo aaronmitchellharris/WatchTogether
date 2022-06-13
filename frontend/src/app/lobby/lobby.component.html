@@ -1,8 +1,10 @@
 <div class="container-fluid h-100">
     <div class="row h-100">
         <div class="col-10 h-100 p-0 bg-light">
-            <div id="video" class="bg-black text-center">
-                <p id="instructions">Paste a YouTube link below to start the watching together!</p>
+            <div id="video" class="bg-black">
+                <div *ngIf="!videoId" id="instructions" class="d-flex text-center align-items-center">
+                    <h1 class="col"><i class="col fa-solid fa-ghost"></i>  This ghost will haunt you until you paste a YouTube link below</h1>
+                </div>
                 <youtube-player [videoId]="videoId" [height]="height" [width]="width"></youtube-player>
             </div>
             <div id="menu" class="container-fluid bg-dark">
@@ -26,9 +28,7 @@
                                         class="fa-solid fa-copy"></i></button>
                             </div>
                         </div>
-
                     </div>
-
                     <div class="col">
                         <form (ngSubmit)="updateVideoId()" #videoIdForm="ngForm">
 
@@ -40,10 +40,8 @@
                             </div>
                         </form>
                     </div>
-
                     <div class="col">
                         <form (ngSubmit)="updateNickname()" #nicknameForm="ngForm">
-
                             <div class="input-group w-75 mx-auto">
                                 <label for="nickname" class="input-group-text">Name:</label>
                                 <input id="nickname" type="text" [(ngModel)]="nickname" name="code" minlength="6"
@@ -59,11 +57,11 @@
         </div>
         <div id="chat" class="col-2 p-0 h-100">
 
-            <div id="chatBox" class="">
-                <app-chat-box class="" [messages]="messageLog"></app-chat-box>
+            <div id="chatBox">
+                <app-chat-box [messages]="messageLog"></app-chat-box>
             </div>
 
-            <div id="chatForm" class="">
+            <div id="chatForm">
                 <form (ngSubmit)="send()" #chatForm="ngForm">
                     <input id="chatInput" type="text" [(ngModel)]="message" name="chatMessage"
                         class="w-100 form-control border-bottom-0 border-start-0 border-end-0 border-dark shadow-none rounded-0">

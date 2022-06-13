@@ -3,5 +3,6 @@ export interface Message {
     lobby: string,
     user: string,
     nickname: string,
-    content: any
+    content: any,
+    videoId: string
 }

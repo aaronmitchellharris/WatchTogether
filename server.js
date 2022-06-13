@@ -51,12 +51,20 @@ wss.on('connection', socket => {
                 lobby: received.lobby,
                 content: lobbies[received.lobby]['messageLog'],
                 user: user,
-                nickname: nickname
+                nickname: nickname,
+                videoId: lobbies[received.lobby]['videoId']
             }));
             // announce entrance to lobby
             message = {meta: 'system', lobby: received.lobby, content: 'has joined', user: user, nickname: nickname};
             lobbies[received.lobby]['messageLog'].push(message); // save message in log
-            sendToLobby(received.lobby, {meta: 'system', lobby: received.lobby, content: lobbies[received.lobby]['messageLog'], user: user, nickname: nickname});
+            sendToLobby(received.lobby, {
+                meta: 'system', 
+                lobby: received.lobby, 
+                content: lobbies[received.lobby]['messageLog'], 
+                user: user, 
+                nickname: nickname, 
+                videoId: lobbies[received.lobby]['videoId']
+            });
             console.log(Object.keys(lobbies[received.lobby]['users']));
         
         // update nickname
@@ -75,10 +83,8 @@ wss.on('connection', socket => {
             sendToLobby(received.lobby, {
                 meta: 'video',
                 lobby: received.lobby,
-                content: {
-                    videoId: received.content, 
-                    messageLog: lobbies[received.lobby]['messageLog']
-                }
+                content:  lobbies[received.lobby]['messageLog'],
+                videoId: lobbies[received.lobby]['videoId']
             })
 
         // send message to everyone in lobby

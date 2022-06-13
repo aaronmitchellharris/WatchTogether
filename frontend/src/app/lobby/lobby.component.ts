@@ -81,11 +81,12 @@ export class LobbyComponent implements OnInit, OnDestroy, AfterContentInit {
       if (!this.cookieService.check('nickname')) {
         this.nickname = data.user;
       }
+      this.videoId = data.videoId;
     } else if (data.meta === 'log' || data.meta == 'system') {
       this.messageLog = data.content;
     } else if (data.meta === 'video') {
-      this.videoId = data.content.videoId;
-      this.messageLog = data.content.messageLog;
+      this.videoId = data.videoId;
+      this.messageLog = data.content;
     } else {
       this.messageLog.push(data);
     }

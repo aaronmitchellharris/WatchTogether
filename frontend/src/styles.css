@@ -16,7 +16,7 @@ html, body {
     color: white;
 }
 
-#chatBox, #video {
+#chatBox, #video, #instructions {
     height: calc(100% - 74px);
 }
 
