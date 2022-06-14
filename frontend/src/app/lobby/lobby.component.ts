@@ -58,6 +58,7 @@ export class LobbyComponent implements OnInit, OnDestroy, AfterContentInit {
       this.yt.seekTo(time, true);
       this.yt.playVideo();
     } else if (state == 2) {
+      this.yt.seekTo(time, true);
       this.yt.pauseVideo();
     }
   }

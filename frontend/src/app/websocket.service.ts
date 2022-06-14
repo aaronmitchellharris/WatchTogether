@@ -14,7 +14,9 @@ export class WebsocketService {
   updateSubject: Subject<any>;
 
   constructor() {
-    this.socket = webSocket(url);  // create socket
+    this.socket = webSocket({url: url, openObserver: {
+      next: () => console.log('CONNECTED')
+    }});  // create socket
     this.updateSubject = new Subject<any>();
   }
 
