@@ -113,7 +113,7 @@ wss.on('connection', socket => {
         } else if (received.meta === "time") {
             try {
             lobbies[received.lobby]['time'] = received.content;
-            } catch {}
+            } catch (error) {console.log(error)}
 
         // send message to everyone in lobby
         } else {
