@@ -143,7 +143,6 @@ wss.on('connection', socket => {
 
 // get list of existing lobbies
 app.get('/lobbies', (req, res) => {
-    res.header('Access-Control-Allow-Origin');
     res.json({ lobbies: Object.keys(lobbies) });
 });
 
