@@ -1,8 +1,8 @@
 const cors = require('cors');
 const path = require('path');
 
-const PORT = 80818;
-const ws_PORT = 80801;
+const PORT = 31212;
+const ws_PORT = 31313;
 
 // create website server
 const express = require('express');

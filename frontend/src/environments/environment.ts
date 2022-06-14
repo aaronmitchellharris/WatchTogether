@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  websocket_url: 'wss://watchtogether.onrender.com/:80801',
-  server_url: 'https://watchtogether.onrender.com/:80818'
+  websocket_url: 'wss://watchtogether.onrender.com/:31313',
+  server_url: 'https://watchtogether.onrender.com/:31212'
   //websocket_url: 'ws://localhost:8080',
   //server_url: 'http://localhost:8081'
 };
