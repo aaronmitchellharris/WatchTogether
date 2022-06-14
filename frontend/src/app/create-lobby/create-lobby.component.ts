@@ -35,7 +35,7 @@ export class CreateLobbyComponent implements OnInit {
 
   // get list of existing lobbies
   getLobbies(): Observable<any> {
-    return this.http.get<any>(`${environment.server_url}/lobbies`);
+    return this.http.get<any>(`${environment.server_url}/lobbies`, {headers: {'Access-Control-Allow-Origin': '*'}});
   }
 
   // join lobby if it exists
