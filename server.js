@@ -111,7 +111,9 @@ wss.on('connection', socket => {
 
         // update time
         } else if (received.meta === "time") {
+            try {
             lobbies[received.lobby]['time'] = received.content;
+            } catch {}
 
         // send message to everyone in lobby
         } else {
@@ -141,6 +143,7 @@ wss.on('connection', socket => {
 
 // get list of existing lobbies
 app.get('/lobbies', (req, res) => {
+    res.header('Access-Control-Allow-Origin');
     res.json({ lobbies: Object.keys(lobbies) });
 });
 
