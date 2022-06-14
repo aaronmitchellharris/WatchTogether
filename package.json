@@ -7,7 +7,7 @@
   },
   "scripts": {
     "start": "node server.js",
-    "heroku-postbuild": "cd frontend && ng build --prod"
+    "heroku-postbuild": "cd frontend && ng build"
   },
   "name": "watchtogether",
   "version": "1.0.0",
