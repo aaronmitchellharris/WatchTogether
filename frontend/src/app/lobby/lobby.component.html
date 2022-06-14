@@ -3,9 +3,12 @@
         <div class="col-10 h-100 p-0 bg-light">
             <div id="video" class="bg-black">
                 <div *ngIf="!videoId" id="instructions" class="d-flex text-center align-items-center">
-                    <h1 class="col"><i class="col fa-solid fa-ghost"></i>  This ghost will haunt you until you paste a YouTube link below</h1>
+                    <h1 class="col"><i class="col fa-solid fa-ghost"></i> This ghost will haunt you until you paste a
+                        YouTube link below</h1>
                 </div>
-                <youtube-player [videoId]="videoId" [height]="height" [width]="width"></youtube-player>
+                <youtube-player #yt [videoId]="videoId" [height]="height" [width]="width" [startSeconds]="time"
+                    [playerVars]="playerVars" (ready)="onReady($event)" (stateChange)="onStateChange($event)">
+                </youtube-player>
             </div>
             <div id="menu" class="container-fluid">
                 <div id="menu-items" class="row align-items-center">
@@ -51,7 +54,6 @@
                             </div>
                         </form>
                     </div>
-
                 </div>
             </div>
         </div>

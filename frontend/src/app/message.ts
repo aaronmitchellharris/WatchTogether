@@ -4,5 +4,7 @@ export interface Message {
     user: string,
     nickname: string,
     content: any,
-    videoId: string
+    videoId: string,
+    state: number,
+    time: number
 }

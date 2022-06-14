@@ -1,9 +1,10 @@
-import { Component, OnInit, Input, OnDestroy, AfterContentInit } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, AfterContentInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { WebsocketService } from '../websocket.service';
 import { Message } from '../message';
 import { Subscription, fromEvent } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
+import { YouTubePlayer } from '@angular/youtube-player';
 
 @Component({
   selector: 'app-lobby',
@@ -21,10 +22,23 @@ export class LobbyComponent implements OnInit, OnDestroy, AfterContentInit {
   videoId?: string;
   @Input() height?: number;
   @Input() width?: number;
+  @Input() time: number = 0;
   messageLog: Message[];
+  joinInfo = {isLate: false, state: -1, time: 0};
   websocketSubscription?: Subscription;
   eventSubscription?: Subscription;
   size?: HTMLElement;
+  playerVars = {
+    controls: 1, 
+    mute: 0, 
+    autoplay: 0, 
+    disablekb: 1, 
+    enablejsapi: 1, 
+    modestbranding: 1, 
+    origin: window.location.origin, 
+    rel: 0
+  };
+  @ViewChild('yt') yt!: YouTubePlayer;
 
   constructor(
     private route: ActivatedRoute,
@@ -36,6 +50,37 @@ export class LobbyComponent implements OnInit, OnDestroy, AfterContentInit {
     this.lobbyLink = window.location.origin + this.router.url;
     this.messageLog = [];
     this.nickname = cookieService.check('nickname') ? cookieService.get('nickname') : '';
+  }
+
+  // play/pause video at specific time
+  videoControl(state: number, time: number): void {
+    if (state == 1) {
+      this.yt.seekTo(time, true);
+      this.yt.playVideo();
+    } else if (state == 2) {
+      this.yt.pauseVideo();
+    }
+  }
+
+  // update server with video player state changes
+  onStateChange(state: any): void {
+    let time = 0;
+    if (state.data == 1 || state.data == 2) {
+      time = this.yt.getCurrentTime();
+      this.WebsocketService.sendMessage("state", this.lobbyId, time, this.user, this.nickname, state.data);
+    }
+  }
+
+  // called when video player is ready
+  onReady(e: any): void {
+    if (this.joinInfo.isLate) {
+      this.videoControl(this.joinInfo.state, this.joinInfo.time);
+    }
+    let time = 0;
+    setInterval(() => {
+      time = this.yt.getCurrentTime();
+      this.WebsocketService.sendMessage("time", this.lobbyId, time, this.user, this.nickname);
+    }, 1000);
   }
 
   ngAfterContentInit(): void {
@@ -82,11 +127,18 @@ export class LobbyComponent implements OnInit, OnDestroy, AfterContentInit {
         this.nickname = data.user;
       }
       this.videoId = data.videoId;
+      if (data.state != -1) {
+        this.joinInfo.isLate = true;
+        this.joinInfo.state = data.state;
+        this.joinInfo.time = data.time;
+      }
     } else if (data.meta === 'log' || data.meta == 'system') {
       this.messageLog = data.content;
     } else if (data.meta === 'video') {
       this.videoId = data.videoId;
       this.messageLog = data.content;
+    } else if (data.meta === 'control') {
+      this.videoControl(data.state, data.content);
     } else {
       this.messageLog.push(data);
     }

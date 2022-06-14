@@ -22,9 +22,9 @@ const lobbies = {};
 
 // send message to everyone in lobby
 sendToLobby = (lobby, message) => {
-    Object.entries(lobbies[lobby]['users']).forEach(([ ,client]) => {
+    Object.entries(lobbies[lobby]['users']).forEach(([, client]) => {
         // send message
-        client.send(JSON.stringify(message)); 
+        client['socket'].send(JSON.stringify(message)); 
     });
 };
 
@@ -43,8 +43,8 @@ wss.on('connection', socket => {
             nickname = received.nickname ? received.nickname : user;
             console.log(`Connection made by User(${user}) from room ${received.lobby}`);
             // create lobby if it doesn't exist
-            if (!lobbies[received.lobby]) lobbies[received.lobby] = {'messageLog': [], 'users': {}, 'videoId': ''};
-            if (!lobbies[received.lobby]['users'][user]) lobbies[received.lobby]['users'][user] = socket;
+            if (!lobbies[received.lobby]) lobbies[received.lobby] = {'messageLog': [], 'users': {}, 'videoId': '', 'globalState': -1, 'time': 0};
+            if (!lobbies[received.lobby]['users'][user]) lobbies[received.lobby]['users'][user] = {'socket': socket};
             // send message log
             socket.send(JSON.stringify({
                 meta: 'initial',
@@ -52,7 +52,9 @@ wss.on('connection', socket => {
                 content: lobbies[received.lobby]['messageLog'],
                 user: user,
                 nickname: nickname,
-                videoId: lobbies[received.lobby]['videoId']
+                videoId: lobbies[received.lobby]['videoId'],
+                state: lobbies[received.lobby]['globalState'],
+                time: lobbies[received.lobby]['time']
             }));
             // announce entrance to lobby
             message = {meta: 'system', lobby: received.lobby, content: 'has joined', user: user, nickname: nickname};
@@ -76,16 +78,40 @@ wss.on('connection', socket => {
                 lobby: received.lobby,
                 content: lobbies[received.lobby]['messageLog']
             })
+
+        // update video ID
         } else if (received.meta === "video") {
-            lobbies[received.lobby]['videoId'] = received.content;
-            message = {meta: 'system', lobby: received.lobby, content: 'changed the video', user: user, nickname, nickname};
-            lobbies[received.lobby]['messageLog'].push(message)
-            sendToLobby(received.lobby, {
-                meta: 'video',
-                lobby: received.lobby,
-                content:  lobbies[received.lobby]['messageLog'],
-                videoId: lobbies[received.lobby]['videoId']
-            })
+            if ( lobbies[received.lobby]['videoId'] != received.content){
+                lobbies[received.lobby]['videoId'] = received.content;
+                message = {meta: 'system', lobby: received.lobby, content: 'changed the video', user: user, nickname, nickname};
+                lobbies[received.lobby]['messageLog'].push(message)
+                lobbies[received.lobby]['globalState'] = -1;
+                sendToLobby(received.lobby, {
+                    meta: 'video',
+                    lobby: received.lobby,
+                    content:  lobbies[received.lobby]['messageLog'],
+                    videoId: lobbies[received.lobby]['videoId'],
+                    state: lobbies[received.lobby]['globalState']
+                })
+            }
+
+        // update video states
+        } else if (received.meta === "state") {
+            if (received.state == 1 || received.state == 2) {
+                if (lobbies[received.lobby]['globalState'] != received.state) {
+                    lobbies[received.lobby]['globalState'] = received.state;
+                    sendToLobby(received.lobby, {
+                        meta: "control",
+                        lobby: received.lobby,
+                        content: received.content,
+                        state: received.state
+                    });
+                }
+            }
+
+        // update time
+        } else if (received.meta === "time") {
+            lobbies[received.lobby]['time'] = received.content;
 
         // send message to everyone in lobby
         } else {

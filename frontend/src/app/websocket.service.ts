@@ -37,13 +37,14 @@ export class WebsocketService {
   }
 
   // send message to server
-  sendMessage(meta: any, lobby: string, content: any, user?: string, nickname?: string): void {
+  sendMessage(meta: any, lobby: string, content: any, user?: string, nickname?: string, state?: number): void {
     this.socket.next({
       meta: meta,
       lobby: lobby,
       user: user,
       nickname: nickname,
-      content: content
+      content: content,
+      state: state
     });
   }
 

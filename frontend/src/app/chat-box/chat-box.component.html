@@ -4,5 +4,4 @@
         <b [id]="'message_'+i">{{msg.nickname}}</b><span *ngIf="msg.meta == 'message'">: </span> {{msg.content}}
         <input id="last_message" type="text" *ngIf="isLast" [value]="i" hidden>
     </div>
-    
 </div>
