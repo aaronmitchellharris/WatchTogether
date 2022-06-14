@@ -145,9 +145,9 @@ app.get('/lobbies', (req, res) => {
 });
 
 // use angular for frontend
-app.get('*', (req, res) => {
-    res.sendFile(index.html);
-});
+//app.get('*', (req, res) => {
+//    res.sendFile(index.html);
+//});
 
 // start server
 app.listen(PORT, () => {
