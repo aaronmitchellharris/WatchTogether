@@ -20,15 +20,49 @@ html, body {
 }
 
 #chatBox, #video, #instructions {
-    height: calc(100% - 74px);
+    height: calc(100% - 84px);
 }
 
 #chatBox {
-    background-color: rgb(143, 143, 143);
+    background-color: black;
+    padding-top: 10px;
+    padding-bottom: 0px;
+}
+
+#innerChat {
+    width: 95%;
+    height: 98%;
+    /*background-color: rgb(143, 143, 143);
+    background-color: rgb(48, 48, 48);*/
+    border-radius: 10px;
+}
+
+#chatForm {
+    background-color: black;
+    padding-bottom: 5px;
+    height: 84px;
+}
+
+#chatInput, #chatButton {
+    width: 95%;
+}
+
+#chatInput {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+
+#chatButton {
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
 
 .navbar {
-    background-color: rgb(48, 48, 48);
+    /*background-color: rgb(48, 48, 48);*/
 }
 
 .btn {
@@ -37,13 +71,13 @@ html, body {
 }
 
 #menu {
-    height: 74px;
-    background-color: rgb(48, 48, 48)
+    height: 84px;
+    background-color: black;
 }
 
 #menu-items {
-    padding-top: 4px;
-    padding-bottom: 4px;
+    padding-top: 10px;
+    padding-bottom: 5px;
 }
 
 #code-group {
@@ -62,6 +96,7 @@ html, body {
 
 .message {
     margin: 3px;
+    color: rgb(209, 209, 209);
 }
 
 #bottom {
@@ -70,4 +105,19 @@ html, body {
 
 #start {
     width: auto;
+}
+
+::-webkit-scrollbar-track {
+    display: none;
+}
+
+::-webkit-scrollbar
+{
+	width: 12px;
+}
+
+::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
 }

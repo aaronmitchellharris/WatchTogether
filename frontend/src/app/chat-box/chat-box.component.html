@@ -1,4 +1,4 @@
-<div #scrollMe class="messages overflow-auto h-100">
+<div id="innerChat" class="messages overflow-auto bg-dark">
     <div class="m-auto"></div>
     <div *ngFor="let msg of messages; index as i; last as isLast" class="message text-start text-wrap" [ngClass]="{'system': msg.meta == 'system', 'chat': msg.meta != 'system'}">
         <b [id]="'message_'+i">{{msg.nickname}}</b><span *ngIf="msg.meta == 'message'">: </span> {{msg.content}}

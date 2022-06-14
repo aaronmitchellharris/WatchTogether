@@ -66,9 +66,9 @@
             <div id="chatForm">
                 <form (ngSubmit)="send()" #chatForm="ngForm">
                     <input id="chatInput" type="text" [(ngModel)]="message" name="chatMessage"
-                        class="w-100 form-control border-bottom-0 border-start-0 border-end-0 border-dark shadow-none rounded-0">
+                        class="form-control border-bottom-0 border-start-0 border-end-0 border-dark shadow-none">
                     <button type="submit" (click)="send()" id="chatButton"
-                        class="btn border-start-0 border-end-0 border-bottom-0 border-dark rounded-0 w-100">Send
+                        class="btn border-start-0 border-end-0 border-bottom-0 border-dark">Send
                         Message</button>
                 </form>
             </div>
