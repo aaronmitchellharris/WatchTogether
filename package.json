@@ -6,8 +6,7 @@
     "ws": "^8.7.0"
   },
   "scripts": {
-    "start": "node server.js",
-    "heroku-postbuild": "cd frontend && ng build"
+    "start": "node server.js"
   },
   "name": "watchtogether",
   "version": "1.0.0",
