@@ -89,8 +89,10 @@ export class LobbyComponent implements OnInit, OnDestroy, AfterContentInit {
         this.yt.seekTo(time, true);
         setTimeout(()=> this.yt.pauseVideo(), 1000);
       }
+      setTimeout(() => {this.sendState = true;}, 3000);
+    } else {
+      this.sendState = true;
     }
-    setTimeout(() => {this.sendState = true;}, 3000);
     let time = 0;
     setInterval(() => {
       time = this.yt.getCurrentTime();
