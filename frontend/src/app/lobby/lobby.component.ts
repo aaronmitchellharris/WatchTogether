@@ -156,6 +156,10 @@ export class LobbyComponent implements OnInit, OnDestroy, AfterContentInit {
       this.messageLog = data.content;
     } else if (data.meta === 'control') {
       this.videoControl(data.state, data.content);
+    } else if (data.meta === 'disconnected') {
+      this.sendState = false;
+      this.WebsocketService.connect();
+      this.WebsocketService.sendMessage("join", this.lobbyId, null, this.user, this.nickname);
     } else {
       this.messageLog.push(data);
     }
