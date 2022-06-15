@@ -111,9 +111,9 @@ wss.on('connection', socket => {
 
         // update time
         } else if (received.meta === "time") {
-            try {
-            lobbies[received.lobby]['time'] = received.content;
-            } catch (error) {console.log(error)}
+            if (lobbies[received.lobby]) {
+                lobbies[received.lobby]['time'] = received.content;
+            }
 
         // send message to everyone in lobby
         } else {
