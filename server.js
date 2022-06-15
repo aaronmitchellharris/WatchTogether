@@ -1,8 +1,8 @@
 const cors = require('cors');
 const path = require('path');
 
-const PORT = 31212;
-const ws_PORT = 31313;
+const PORT = process.env.PORT || 31212;
+const ws_PORT = process.env.ws_PORT || 31313;
 
 // create website server
 const express = require('express');
@@ -156,5 +156,5 @@ app.get('/lobbies', (req, res) => {
 
 // start server
 app.listen(PORT, () => {
-    console.log(`Server listening on port ${PORT}...`);
+    console.log(`Server listening on port ${PORT}... WS on port ${ws_PORT}`);
 })
