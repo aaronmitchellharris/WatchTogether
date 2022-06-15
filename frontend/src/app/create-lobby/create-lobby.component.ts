@@ -40,13 +40,13 @@ export class CreateLobbyComponent implements OnInit {
 
   // join lobby if it exists
   onSubmit(code: string): void {
-    this.getLobbies().subscribe(data => {
-      if ( data.lobbies.includes(code) ) {
+    //this.getLobbies().subscribe(data => {
+      //if ( data.lobbies.includes(code) ) {
         this.router.navigate([`/room/${code}`]);
-      } else {
-        this.alert = true;
-      }
-    });
+      //} else {
+      //  this.alert = true;
+      //}
+    //});
   }
 
 }
