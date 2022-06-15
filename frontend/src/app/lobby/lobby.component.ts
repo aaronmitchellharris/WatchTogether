@@ -40,6 +40,8 @@ export class LobbyComponent implements OnInit, OnDestroy, AfterContentInit {
   };
   @ViewChild('yt') yt!: YouTubePlayer;
   sendState: boolean = false;
+  sendTime: boolean = true;
+  firstConnect: boolean = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -93,11 +95,14 @@ export class LobbyComponent implements OnInit, OnDestroy, AfterContentInit {
     } else {
       this.sendState = true;
     }
-    let time = 0;
-    setInterval(() => {
-      time = this.yt.getCurrentTime();
-      this.WebsocketService.sendMessage("time", this.lobbyId, time, this.user, this.nickname);
-    }, 1000);
+    if (this.sendTime) {
+      let time = 0;
+      setInterval(() => {
+        time = this.yt.getCurrentTime();
+        this.WebsocketService.sendMessage("time", this.lobbyId, time, this.user, this.nickname);
+      }, 1000);
+      this.sendTime = false;
+    }
   }
 
   ngAfterContentInit(): void {
@@ -149,6 +154,9 @@ export class LobbyComponent implements OnInit, OnDestroy, AfterContentInit {
         this.joinInfo.state = data.state;
         this.joinInfo.time = data.time;
       }
+      if (!this.firstConnect) {
+        this.onReady('');
+      }
     } else if (data.meta === 'log' || data.meta == 'system') {
       this.messageLog = data.content;
     } else if (data.meta === 'video') {
@@ -158,6 +166,7 @@ export class LobbyComponent implements OnInit, OnDestroy, AfterContentInit {
       this.videoControl(data.state, data.content);
     } else if (data.meta === 'disconnected') {
       this.sendState = false;
+      this.firstConnect = false;
       this.WebsocketService.connect();
       this.WebsocketService.sendMessage("join", this.lobbyId, null, this.user, this.nickname);
     } else {
