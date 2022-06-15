@@ -39,6 +39,7 @@ export class LobbyComponent implements OnInit, OnDestroy, AfterContentInit {
     rel: 0
   };
   @ViewChild('yt') yt!: YouTubePlayer;
+  sendState: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -65,18 +66,31 @@ export class LobbyComponent implements OnInit, OnDestroy, AfterContentInit {
 
   // update server with video player state changes
   onStateChange(state: any): void {
-    let time = 0;
-    if (state.data == 1 || state.data == 2) {
-      time = this.yt.getCurrentTime();
-      this.WebsocketService.sendMessage("state", this.lobbyId, time, this.user, this.nickname, state.data);
+    if (this.sendState) {
+      let time = 0;
+      if (state.data == 1 || state.data == 2) {
+        time = this.yt.getCurrentTime();
+        this.WebsocketService.sendMessage("state", this.lobbyId, time, this.user, this.nickname, state.data);
+      }
     }
   }
 
   // called when video player is ready
   onReady(e: any): void {
     if (this.joinInfo.isLate) {
-      this.videoControl(this.joinInfo.state, this.joinInfo.time);
+      //this.videoControl(this.joinInfo.state, this.joinInfo.time);
+      let state = this.joinInfo.state;
+      let time = this.joinInfo.time;
+      if (state == 1) {
+        this.yt.seekTo(time, true);
+        this.yt.playVideo();
+      } else if (state == 2) {
+        this.yt.playVideo();
+        this.yt.seekTo(time, true);
+        setTimeout(()=> this.yt.pauseVideo(), 1000);
+      }
     }
+    setTimeout(() => {this.sendState = true;}, 3000);
     let time = 0;
     setInterval(() => {
       time = this.yt.getCurrentTime();
