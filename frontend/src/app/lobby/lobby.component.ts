@@ -50,7 +50,7 @@ export class LobbyComponent implements OnInit, OnDestroy, AfterContentInit {
     private cookieService: CookieService
   ) {
     this.lobbyId = String(this.route.snapshot.paramMap.get('id'));
-    this.lobbyLink = window.location.origin + this.router.url;
+    this.lobbyLink = window.location.origin + '/WatchTogether' + this.router.url;
     this.messageLog = [];
     this.nickname = cookieService.check('nickname') ? cookieService.get('nickname') : '';
   }
