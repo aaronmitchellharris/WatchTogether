@@ -2,7 +2,7 @@ const cors = require('cors');
 const path = require('path');
 
 const PORT = process.env.PORT || 31212;
-const ws_PORT = process.env.ws_PORT || 31313;
+const ws_PORT = process.env.ws_PORT || 8080;
 
 // create website server
 const express = require('express');
