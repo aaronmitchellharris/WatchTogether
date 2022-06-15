@@ -24,7 +24,7 @@ export class WebsocketService {
   connect(): void {
     this.socket.subscribe({
       next: (msg) => this.receiveMessage(msg), // Called whenever there is a message from the server.
-      error: err => console.log(err), // Called if at any point WebSocket API signals some kind of error.
+      error: err => console.log('websocket service error: ', err), // Called if at any point WebSocket API signals some kind of error.
       complete: () => console.log('complete') // Called when connection is closed (for whatever reason).
     });
     console.log('Connected to lobby');

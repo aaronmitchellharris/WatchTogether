@@ -115,7 +115,7 @@ export class LobbyComponent implements OnInit, OnDestroy, AfterContentInit {
     this.WebsocketService.sendMessage("join", this.lobbyId, null, this.user, this.nickname);
     this.websocketSubscription = this.WebsocketService.getUpdateSubject().subscribe({
       next: (msg) => {this.addMessage(msg)},
-      error: (error) => console.log(error)
+      error: (error) => console.log('websocket subscription error: ', error)
     });
   }
 
