@@ -42,7 +42,7 @@ export class CreateLobbyComponent implements OnInit {
   onSubmit(code: string): void {
     //this.getLobbies().subscribe(data => {
       //if ( data.lobbies.includes(code) ) {
-        this.router.navigate([`/room/${code}`]);
+        this.router.navigate([`/room/${code.toUpperCase()}`]);
       //} else {
       //  this.alert = true;
       //}
