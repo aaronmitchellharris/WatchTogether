@@ -125,18 +125,22 @@ wss.on('connection', socket => {
     // handle closing connection
     socket.on('close', () => {
         Object.keys(lobbies).forEach(lobby => {
-            if (Object.keys(lobbies[lobby]['users']).length === 1) {
-                delete lobbies[lobby];
-            } else {
-                message = {meta: 'system', lobby: lobby, content: 'has left', user: user, nickname: nickname};
-                lobbies[lobby]['messageLog'].push(message); // save message in log
-                sendToLobby(lobby, {meta: 'system', lobby: lobby, content: lobbies[lobby]['messageLog'], user: user, nickname: nickname})
-                delete lobbies[lobby]['users'][user];
-            }
+            message = {meta: 'system', lobby: lobby, content: 'has left', user: user, nickname: nickname};
+            lobbies[lobby]['messageLog'].push(message); // save message in log
+            sendToLobby(lobby, {meta: 'system', lobby: lobby, content: lobbies[lobby]['messageLog'], user: user, nickname: nickname})
+            delete lobbies[lobby]['users'][user];
             console.log(`Connection ended by User(${user}) from room ${lobby}`);
             try {
             console.log(Object.keys(lobbies[lobby]['users']));
             } catch{}
+
+            if (Object.keys(lobbies[lobby]['users']).length === 0) {
+                setTimeout(() => {
+                    if (Object.keys(lobbies[lobby]['users']).length === 0) {
+                        delete lobbies[lobby];
+                    }
+                }, 5000)
+            }
         })
     });
 });
